@@ -1,11 +1,11 @@
 <template>
   <v-layout align-start>
     <v-flex>
+      <!-- :items="desserts" es arreglo -->
       <v-data-table
         :headers="headers"
-        :items="desserts"
+        :items="incidencias"
         :search="search"
-        sort-by="calories"
         class="elevation-1"
       >
         <template v-slot:top>
@@ -40,54 +40,83 @@
                 </v-card-title>
 
                 <v-card-text>
+                  <!-- cuadro de dialogo editar y agrega ********************* -->
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.name"
-                          label="Dessert name"
+                          v-model="codigo"
+                          label="Codigo"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.calories"
-                          label="Calories"
+                          v-model="responsable"
+                          label="Responsable"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.fat"
-                          label="Fat (g)"
+                          v-model="tipo"
+                          label="Tipo"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.carbs"
-                          label="Carbs (g)"
+                          v-model="descripcion"
+                          label="Descripcion"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.protein"
-                          label="Protein (g)"
+                          v-model="nombreCliente"
+                          label="Nombre Cliente"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="prioridad"
+                          label="Prioridad"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="medioAtencion"
+                          label="Medio de Atencion"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="fechaInicio"
+                          label="Fecha Inicio"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="fechaTermino"
+                          label="Fecha Fin"
                         ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
+                  <!-- cuadro de dialogo editar y agregar ********************* -->
                 </v-card-text>
 
                 <v-card-actions>
+                  <!-- botones de editar y eliminar ********************* -->
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="close">
                     Cancelar
                   </v-btn>
-                  <v-btn color="blue darken-1" text @click="save">
+                  <v-btn color="blue darken-1" text @click="guardar">
                     Guardar
                   </v-btn>
+                  <!-- botones de editar y eliminar ********************* -->
                 </v-card-actions>
               </v-card>
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="500px">
+              <!-- Cuadro de confirmacion para eliminar ********************* -->
               <v-card>
                 <v-card-title class="text-h5"
                   >Are you sure you want to delete this item?</v-card-title
@@ -103,19 +132,22 @@
                   <v-spacer></v-spacer>
                 </v-card-actions>
               </v-card>
+              <!-- Cuadro de confirmacion para eliminar ********************** -->
             </v-dialog>
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
+          <!-- Iconos de Acciones ********************** -->
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item)">
             mdi-delete
           </v-icon>
+          <!-- Iconos de Acciones ********************** -->
         </template>
         <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize">
+          <v-btn color="primary" @click="listar()">
             Reset
           </v-btn>
         </template>
@@ -125,46 +157,44 @@
 </template>
 
 <script>
+// hasta acaaaaaaaaaa marca
+// verrrrrt
+import axios from "axios";
 export default {
   data() {
     return {
       dialog: false,
       search: "",
+      incidencias: [], // se agrega variable, se alamcena datos del back
       dialogDelete: false,
       headers: [
-        {
-          text: "Dessert (100g serving)",
-          align: "start",
-          sortable: false,
-          value: "name",
-        },
-        { text: "Calories", value: "calories" },
-        { text: "Fat (g)", value: "fat" },
-        { text: "Carbs (g)", value: "carbs" },
-        { text: "Protein (g)", value: "protein" },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "Codigo", value: "codigo", sortable: true },
+        { text: "Responsable", value: "responsable.nombre", sortable: true },
+        { text: "Tipo", value: "tipo", sortable: true },
+        { text: "Descripcion", value: "descripcion", sortable: false },
+        { text: "Cliente", value: "nombreCliente", sortable: true },
+        { text: "Prioridad", value: "prioridad", sortable: true },
+        { text: "Atención", value: "medioAtencion", sortable: true },
+        { text: "FechaIni", value: "fechaInicio", sortable: true },
+        { text: "FechaTer", value: "fechaTermino", sortable: true },
+        { text: "Opciones", value: "actions", sortable: false },
       ],
-      desserts: [],
       editedIndex: -1,
-      editedItem: {
-        name: "",
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
-      defaultItem: {
-        name: "",
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
+      _id: "",
+      codigo: "",
+      responsable: "",
+      tipo: "",
+      descripcion: "",
+      nombreCliente: "",
+      prioridad: "",
+      medioAtencion: "",
+      fechaInicio: "",
+      fechaTermino: "",
     };
   },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "Nuevo registro" : "Editar registro";
     },
   },
 
@@ -178,108 +208,81 @@ export default {
   },
 
   created() {
-    this.initialize();
+    this.listar();
   },
 
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-        },
-      ];
+    listar() {
+      // se agrega el metodo
+      let me = this;
+      axios
+        .get("incidencia/listar")
+        .then(function(response) {
+          me.incidencias = response.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
-
+    limpiar() {
+      this._id = "";
+      this.codigo = "";
+      this.responsable = "";
+      this.tipo = "";
+      this.descripcion = "";
+      this.nombreCliente = "";
+      this.prioridad = "";
+      this.medioAtencion = "";
+      this.fechaInicio = "";
+      this.fechaTermino = "";
+    },
+    guardar() {
+      let me = this;
+      if (this.editedIndex > -1) {
+        // codigo para editar
+      } else {
+        // codigo para guardar
+        axios
+          .post("incidencia/agregar", {
+            codigo: this.codigo,
+            responsable: this.responsable,
+            tipo: this.tipo,
+            descripcion: this.descripcion,
+            nombreCliente: this.nombreCliente,
+            prioridad: this.prioridad,
+            medioAtencion: this.medioAtencion,
+            fechaInicio: this.fechaInicio,
+            fechaTermino: this.fechaTermino,
+          })
+          .then(function(response) {
+            me.limpiar();
+            me.close();
+            me.listar();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+    },
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.incidencias.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.incidencias.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+      this.incidencias.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
@@ -288,15 +291,6 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-      this.close();
     },
   },
 };
