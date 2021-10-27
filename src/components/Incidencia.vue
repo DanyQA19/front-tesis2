@@ -39,9 +39,9 @@
                   <span class="text-h5">{{ formTitle }}</span>
                 </v-card-title>
 
-                <v-card-text>
+                <v-card-text >
                   <!-- cuadro de dialogo editar y agrega ********************* -->
-                  <v-container>
+                  <v-container >
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -56,10 +56,12 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="tipo"
-                          label="Tipo"
-                        ></v-text-field>
+                        
+                        <v-select v-model="tipo"
+                          :items="tipoIncidencia"
+                           label="Tipo"
+                        ></v-select>
+
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -74,28 +76,112 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="prioridad"
-                          label="Prioridad"
-                        ></v-text-field>
+                        
+                        <v-select v-model="prioridad"
+                          :items="tipoPrioridad"
+                           label="Prioridad"
+                        ></v-select>
+
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="medioAtencion"
-                          label="Medio de Atencion"
-                        ></v-text-field>
+
+                        <v-select v-model="medioAtencion"
+                          :items="tipoMedioAtencion"
+                           label="Med. Atención"
+                        ></v-select>
+
+                      </v-col>
+
+                      <v-col cols="12" sm="6" md="4" >
+                       
+                        <v-menu
+                            ref="menu"
+                            v-model="menu"
+                            :close-on-content-click="false"
+                            :return-value.sync="fechaInicio"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="auto"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-text-field
+                                v-model="fechaInicio"
+                                label="Fecha Inicio"
+                                prepend-icon="mdi-calendar"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                              ></v-text-field>
+                            </template>
+                            <v-date-picker
+                              v-model="fechaInicio"
+                              no-title
+                              scrollable
+                            >
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                text
+                                color="primary"
+                                @click="menu = false"
+                              >
+                                Cancel
+                              </v-btn>
+                              <v-btn
+                                text
+                                color="primary"
+                                @click="$refs.menu.save(fechaInicio)"
+                              >
+                                OK
+                              </v-btn>
+                            </v-date-picker>
+                        </v-menu>
+
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="fechaInicio"
-                          label="Fecha Inicio"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="fechaTermino"
-                          label="Fecha Fin"
-                        ></v-text-field>
+                       
+                       <v-menu
+                            ref="menu2"
+                            v-model="menu2"
+                            :close-on-content-click="false"
+                            :return-value.sync="fechaTermino"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="auto"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-text-field
+                                v-model="fechaTermino"
+                                label="Fecha Termino"
+                                prepend-icon="mdi-calendar"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                              ></v-text-field>
+                            </template>
+                            <v-date-picker
+                              v-model="fechaTermino"
+                              no-title
+                              scrollable
+                            >
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                text
+                                color="primary"
+                                @click="menu2 = false"
+                              >
+                                Cancel
+                              </v-btn>
+                              <v-btn
+                                text
+                                color="primary"
+                                @click="$refs.menu2.save(fechaTermino)"
+                              >
+                                OK
+                              </v-btn>
+                            </v-date-picker>
+                        </v-menu>
+
+                        
                       </v-col>
                     </v-row>
                   </v-container>
@@ -184,12 +270,18 @@ export default {
       codigo: "",
       responsable: "",
       tipo: "",
+      tipoIncidencia: ['SGD', 'CD', 'MAT', 'SGT', 'ATD', 'OTROS'],
       descripcion: "",
       nombreCliente: "",
       prioridad: "",
+      tipoPrioridad: ['Baja', 'Media', 'Alta'],
       medioAtencion: "",
-      fechaInicio: "",
-      fechaTermino: "",
+      tipoMedioAtencion: ['Correo electrónico', 'Llamada', 'Remota'],
+      fechaInicio: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      fechaTermino: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      menu: false,
+      modal: false,
+      menu2: false,
     };
   },
   computed: {
