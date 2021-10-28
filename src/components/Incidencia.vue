@@ -43,12 +43,12 @@
                   <!-- cuadro de dialogo editar y agrega ********************* -->
                   <v-container >
                     <v-row>
-                      <v-col cols="12" sm="6" md="4">
+                      <!-- <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="codigo"
                           label="Codigo"
                         ></v-text-field>
-                      </v-col>
+                      </v-col> -->
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="responsable"
@@ -318,7 +318,6 @@ export default {
     },
     limpiar() {
       this._id = "";
-      this.codigo = "";
       this.responsable = "";
       this.tipo = "";
       this.descripcion = "";
@@ -336,7 +335,7 @@ export default {
         // codigo para guardar
         axios
           .post("incidencia/agregar", {
-            codigo: this.codigo,
+            codigo: "",
             responsable: this.responsable,
             tipo: this.tipo,
             descripcion: this.descripcion,
