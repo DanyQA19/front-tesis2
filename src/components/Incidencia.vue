@@ -63,6 +63,7 @@
                         ></v-select>
 
                       </v-col>
+
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="descripcion"
@@ -181,8 +182,13 @@
                             </v-date-picker>
                         </v-menu>
 
-                        
                       </v-col>
+
+                      <v-col cols="12" sm="6" md="4" v-show="valida">
+                        <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                        </div>
+                      </v-col>
+
                     </v-row>
                   </v-container>
                   <!-- cuadro de dialogo editar y agregar ********************* -->
@@ -205,15 +211,15 @@
               <!-- Cuadro de confirmacion para eliminar ********************* -->
               <v-card>
                 <v-card-title class="text-h5"
-                  >Are you sure you want to delete this item?</v-card-title
+                  >¿Desea eliminar esta incidencia?</v-card-title
                 >
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="closeDelete"
-                    >Cancel</v-btn
+                    >Cancelar</v-btn
                   >
                   <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                    >OK</v-btn
+                    >Si</v-btn
                   >
                   <v-spacer></v-spacer>
                 </v-card-actions>
@@ -282,6 +288,8 @@ export default {
       menu: false,
       modal: false,
       menu2: false,
+      valida: 0,
+      validaMensaje: []
     };
   },
   computed: {
@@ -307,8 +315,10 @@ export default {
     listar() {
       // se agrega el metodo
       let me = this;
+      let header = {"token": this.$store.state.token};
+      let configuracion = {headers: header};
       axios
-        .get("incidencia/listar")
+        .get("incidencia/listar", configuracion)
         .then(function(response) {
           me.incidencias = response.data;
         })
@@ -326,11 +336,57 @@ export default {
       this.medioAtencion = "";
       this.fechaInicio = "";
       this.fechaTermino = "";
+      this.valida = 0;
+      this.validaMensaje = [];
+      this.editedIndex = -1;
+    },
+    validar(){
+        this.valida = 0;
+        this.validaMensaje = [];
+
+        if(this.tipo.length < 1){
+            this.validaMensaje.push('Ingrese tipo');
+        }
+        if(this.fechaInicio.length < 1){
+            this.validaMensaje.push('Ingrese fecha inicio');
+        }
+        if(this.fechaTermino.length < 1){
+            this.validaMensaje.push('Ingrese fecha termino');
+        }
+        if(this.validaMensaje.length){
+            this.valida = 1;
+        }
+        return this.valida;
     },
     guardar() {
       let me = this;
+      let header = {"token": this.$store.state.token};
+      let configuracion = {headers: header};
+      if(this.validar()){
+        return;
+      }
       if (this.editedIndex > -1) {
         // codigo para editar
+        axios.put("incidencia/editar", { _id: this._id,
+            codigo: this.codigo,
+            responsable: this.responsable,
+            tipo: this.tipo,
+            descripcion: this.descripcion,
+            nombreCliente: this.nombreCliente,
+            prioridad: this.prioridad,
+            medioAtencion: this.medioAtencion,
+            fechaInicio: this.fechaInicio,
+            fechaTermino: this.fechaTermino,
+          }, configuracion)
+          .then(function(response) {
+            me.limpiar();
+            me.close();
+            me.listar();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+
       } else {
         // codigo para guardar
         axios
@@ -344,7 +400,7 @@ export default {
             medioAtencion: this.medioAtencion,
             fechaInicio: this.fechaInicio,
             fechaTermino: this.fechaTermino,
-          })
+          }, configuracion)
           .then(function(response) {
             me.limpiar();
             me.close();
@@ -356,9 +412,19 @@ export default {
       }
     },
     editItem(item) {
-      this.editedIndex = this.incidencias.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this._id = item._id;
+      this.codigo = item.codigo;
+      this.responsable = item.responsable;
+      this.tipo = item.tipo;
+      this.descripcion = item.descripcion;
+      this.nombreCliente = item.nombreCliente;
+      this.prioridad = item.prioridad;
+      this.medioAtencion = item.medioAtencion;
+      this.fechaInicio = item.fechaInicio;
+      this.fechaTermino = item.fechaTermino;
+
       this.dialog = true;
+      this.editedIndex = 1;
     },
 
     deleteItem(item) {
@@ -373,6 +439,7 @@ export default {
     },
 
     close() {
+      this.limpiar();
       this.dialog = false;
     },
 
