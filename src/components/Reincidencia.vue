@@ -4,13 +4,13 @@
       <!-- :items="desserts" es arreglo -->
       <v-data-table
         :headers="headers"
-        :items="incidencias"
+        :items="reincidencias"
         :search="search"
         class="elevation-1"
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Incidencias</v-toolbar-title>
+            <v-toolbar-title>Reincidencias</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-text-field
@@ -50,18 +50,10 @@
                         ></v-text-field>
                       </v-col> -->
                       <v-col cols="12" sm="6" md="4">
-                        <v-select v-model="responsable"
-                          :items="responsables"
-                           label="Responsable"
+                        <v-select v-model="incidencia"
+                          :items="incidencias"
+                           label="Incidencia"
                         ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        
-                        <v-select v-model="tipo"
-                          :items="tipoIncidencia"
-                           label="Tipo"
-                        ></v-select>
-
                       </v-col>
 
                       <v-col cols="12" sm="6" md="4">
@@ -69,28 +61,6 @@
                           v-model="descripcion"
                           label="Descripcion"
                         ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="nombreCliente"
-                          label="Nombre Cliente"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        
-                        <v-select v-model="prioridad"
-                          :items="tipoPrioridad"
-                           label="Prioridad"
-                        ></v-select>
-
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-
-                        <v-select v-model="medioAtencion"
-                          :items="tipoMedioAtencion"
-                           label="Med. Atención"
-                        ></v-select>
-
                       </v-col>
 
                       <v-col cols="12" sm="6" md="4" >
@@ -257,33 +227,22 @@ export default {
     return {
       dialog: false,
       search: "",
-      incidencias: [], // se agrega variable, se alamcena datos del back
+      reincidencias: [], // se agrega variable, se alamcena datos del back
       dialogDelete: false,
       headers: [
-        { text: "Codigo", value: "codigo", sortable: true },
-        { text: "Responsable", value: "responsable.nombre", sortable: true },
-        { text: "Tipo", value: "tipo", sortable: true },
+        { text: "#", value: "replica", sortable: true },
+        { text: "Incidencia", value: "incidencia.codigo", sortable: true },
         { text: "Descripcion", value: "descripcion", sortable: false },
-        { text: "Cliente", value: "nombreCliente", sortable: true },
-        { text: "Prioridad", value: "prioridad", sortable: true },
-        { text: "Atención", value: "medioAtencion", sortable: true },
         { text: "FechaIni", value: "fechaInicio", sortable: true },
         { text: "FechaTer", value: "fechaTermino", sortable: true },
         { text: "Opciones", value: "actions", sortable: false },
       ],
       editedIndex: -1,
       _id: "",
-      codigo: "",
-      responsable: "",
-      responsables: [],
-      tipo: "",
-      tipoIncidencia: ['SGD', 'CD', 'MAT', 'SGT', 'ATD', 'OTROS'],
+      replica: 1,
+      incidencia: "",
+      incidencias: [],
       descripcion: "",
-      nombreCliente: "",
-      prioridad: "",
-      tipoPrioridad: ['Baja', 'Media', 'Alta'],
-      medioAtencion: "",
-      tipoMedioAtencion: ['Correo electrónico', 'Llamada', 'Remota'],
       fechaInicio: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       fechaTermino: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu: false,
@@ -310,22 +269,22 @@ export default {
 
   created() {
     this.listar();
-    this.selectResponsable();
+    this.selectIncidencia();
   },
 
   methods: {
-    selectResponsable(){
+    selectIncidencia(){
       let me = this;
-      let responsableArray = [];
+      let incidenciaArray = [];
       let header = {"token": this.$store.state.token};
       let configuracion = {headers: header};
-      axios.get("usuario/listar", configuracion)
+      axios.get("incidencia/listar", configuracion)
         .then(function(response) {
-          responsableArray = response.data;
-          responsableArray.map(function(x){
-            if(x.rol == 'trabajador'){
-              me.responsables.push({text: x.nombre, value: x._id});
-            }
+          incidenciaArray = response.data;
+          incidenciaArray.map(function(x){
+    
+              me.incidencias.push({text: x.codigo, value: x._id});
+        
             
           });
         })
@@ -339,9 +298,9 @@ export default {
       let header = {"token": this.$store.state.token};
       let configuracion = {headers: header};
       axios
-        .get("incidencia/listar", configuracion)
+        .get("reincidencia/listar", configuracion)
         .then(function(response) {
-          me.incidencias = response.data;
+          me.reincidencias = response.data;
         })
         .catch(function(error) {
           console.log(error);
@@ -349,12 +308,8 @@ export default {
     },
     limpiar() {
       this._id = "";
-      this.responsable = "";
-      this.tipo = "";
+      this.incidencia = "";
       this.descripcion = "";
-      this.nombreCliente = "";
-      this.prioridad = "";
-      this.medioAtencion = "";
       this.fechaInicio = "";
       this.fechaTermino = "";
       this.valida = 0;
@@ -365,9 +320,6 @@ export default {
         this.valida = 0;
         this.validaMensaje = [];
 
-        if(this.tipo.length < 1){
-            this.validaMensaje.push('Ingrese tipo');
-        }
         if(this.fechaInicio.length < 1){
             this.validaMensaje.push('Ingrese fecha inicio');
         }
@@ -388,14 +340,10 @@ export default {
       }
       if (this.editedIndex > -1) {
         // codigo para editar
-        axios.put("incidencia/editar", { _id: this._id,
-            codigo: this.codigo,
-            responsable: this.responsable,
-            tipo: this.tipo,
+        axios.put("reincidencia/editar", { _id: this._id,
+            replica: this.replica,
+            incidencia: this.incidencia,
             descripcion: this.descripcion,
-            nombreCliente: this.nombreCliente,
-            prioridad: this.prioridad,
-            medioAtencion: this.medioAtencion,
             fechaInicio: this.fechaInicio,
             fechaTermino: this.fechaTermino,
           }, configuracion)
@@ -411,14 +359,10 @@ export default {
       } else {
         // codigo para guardar
         axios
-          .post("incidencia/agregar", {
-            codigo: "",
-            responsable: this.responsable,
-            tipo: this.tipo,
+          .post("reincidencia/agregar", {
+            replica: this.replica,
+            incidencia: this.incidencia,
             descripcion: this.descripcion,
-            nombreCliente: this.nombreCliente,
-            prioridad: this.prioridad,
-            medioAtencion: this.medioAtencion,
             fechaInicio: this.fechaInicio,
             fechaTermino: this.fechaTermino,
           }, configuracion)
@@ -434,13 +378,9 @@ export default {
     },
     editItem(item) {
       this._id = item._id;
-      this.codigo = item.codigo;
-      this.responsable = item.responsable._id;
-      this.tipo = item.tipo;
+      this.replica = item.replica;
+      this.incidencia = item.incidencia._id;
       this.descripcion = item.descripcion;
-      this.nombreCliente = item.nombreCliente;
-      this.prioridad = item.prioridad;
-      this.medioAtencion = item.medioAtencion;
       this.fechaInicio = item.fechaInicio;
       this.fechaTermino = item.fechaTermino;
 

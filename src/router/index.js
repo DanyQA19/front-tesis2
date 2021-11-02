@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import store from '../store/index';
 import Home from "../views/Home.vue";
 import Incidencia from "../components/Incidencia.vue";
+import Reincidencia from "../components/Reincidencia.vue";
+import Usuario from '../components/Usuario.vue'
 import Login from '../components/Login.vue'
 
 Vue.use(VueRouter);
@@ -33,6 +35,23 @@ const routes = [
     meta: {
       administrador: true,
       trabajador: true
+    }
+  },
+  {
+    path: "/reincidencia",
+    name: "reincidencia",
+    component: Reincidencia,
+    meta: {
+      administrador: true,
+      trabajador: true
+    }
+  },
+  {
+    path: "/usuario",
+    name: "usuario",
+    component: Usuario,
+    meta: {
+      administrador: true
     }
   },
 ];
