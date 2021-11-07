@@ -203,9 +203,9 @@
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="deleteItem(item)">
+          <!-- <v-icon small @click="deleteItem(item)">
             mdi-delete
-          </v-icon>
+          </v-icon> -->
           <!-- Iconos de Acciones ********************** -->
         </template>
         <template v-slot:no-data>
@@ -235,7 +235,7 @@ export default {
         { text: "Descripcion", value: "descripcion", sortable: false },
         { text: "FechaIni", value: "fechaInicio", sortable: true },
         { text: "FechaTer", value: "fechaTermino", sortable: true },
-        { text: "Opciones", value: "actions", sortable: false },
+        { text: "Editar", value: "actions", sortable: false },
       ],
       editedIndex: -1,
       _id: "",

@@ -40,7 +40,7 @@
               </v-list-item-content>
             </v-list-item>
 
-            <v-list-item :to="{ name: '' }">
+            <!-- <v-list-item :to="{ name: '' }">
               <v-list-item-action>
                 <v-icon>table_chart</v-icon>
               </v-list-item-action>
@@ -49,7 +49,7 @@
                   Artículos
                 </v-list-item-title>
               </v-list-item-content>
-            </v-list-item>
+            </v-list-item> -->
           </v-list-group>
         </template>
 
@@ -74,7 +74,7 @@
               </v-list-item-content>
             </v-list-item>
 
-            <v-list-item :to="{ name: '' }">
+            <!-- <v-list-item :to="{ name: '' }">
               <v-list-item-action>
                 <v-icon>table_chart</v-icon>
               </v-list-item-action>
@@ -83,7 +83,7 @@
                   Proveedores
                 </v-list-item-title>
               </v-list-item-content>
-            </v-list-item>
+            </v-list-item> -->
           </v-list-group>
         </template>
 
@@ -209,8 +209,8 @@
       <v-layout justify-center>
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
-            <v-card-text class="white--text pt-0">
-              IncanatoIT &copy;2019
+            <v-card-text class="white--text pt-0 text-md-center">
+              Sistema &copy;2021
             </v-card-text>
           </v-card>
         </v-flex>

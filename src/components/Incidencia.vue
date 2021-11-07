@@ -71,10 +71,13 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="nombreCliente"
-                          label="Nombre Cliente"
-                        ></v-text-field>
+                        
+                          <v-autocomplete
+                            v-model="nombreCliente"
+                            :items="clientes"
+                            label="Cliente"
+                          ></v-autocomplete>
+
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         
@@ -233,9 +236,9 @@
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="deleteItem(item)">
+          <!-- <v-icon small @click="deleteItem(item)">
             mdi-delete
-          </v-icon>
+          </v-icon> -->
           <!-- Iconos de Acciones ********************** -->
         </template>
         <template v-slot:no-data>
@@ -269,7 +272,7 @@ export default {
         { text: "Atención", value: "medioAtencion", sortable: true },
         { text: "FechaIni", value: "fechaInicio", sortable: true },
         { text: "FechaTer", value: "fechaTermino", sortable: true },
-        { text: "Opciones", value: "actions", sortable: false },
+        { text: "Editar", value: "actions", sortable: false },
       ],
       editedIndex: -1,
       _id: "",
@@ -280,6 +283,7 @@ export default {
       tipoIncidencia: ['SGD', 'CD', 'MAT', 'SGT', 'ATD', 'OTROS'],
       descripcion: "",
       nombreCliente: "",
+      clientes: ['FM', 'FFB', 'FO', 'FMV', 'FPSI', 'FLCH', 'FE', 'FDCP', 'FCCSS', 'FQIQ', 'FCB', 'FCF', 'FCM', 'FIGMMG', 'FII', 'FIEE', 'FISI', 'FCA', 'FCC', 'FCE', 'OGAL', 'VRAP', 'SG', 'OGCRI', 'VRIP', 'UTYC', 'DGA', 'OGAL', 'OGBU', 'OGRRHH', 'DGEP', 'R'],
       prioridad: "",
       tipoPrioridad: ['Baja', 'Media', 'Alta'],
       medioAtencion: "",
