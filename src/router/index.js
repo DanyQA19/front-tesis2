@@ -5,6 +5,7 @@ import Home from "../views/Home.vue";
 import Incidencia from "../components/Incidencia.vue";
 import Reincidencia from "../components/Reincidencia.vue";
 import Usuario from '../components/Usuario.vue'
+import Reporte from '../components/Reporte.vue'
 import Login from '../components/Login.vue'
 
 Vue.use(VueRouter);
@@ -52,6 +53,15 @@ const routes = [
     component: Usuario,
     meta: {
       administrador: true
+    }
+  },
+  {
+    path: "/reporte",
+    name: "reporte",
+    component: Reporte,
+    meta: {
+      administrador: true,
+      gerente: true
     }
   },
 ];
