@@ -230,7 +230,7 @@ export default {
       reincidencias: [], // se agrega variable, se alamcena datos del back
       dialogDelete: false,
       headers: [
-        { text: "#", value: "replica", sortable: true },
+        { text: "#", value: "replica", sortable: false },
         { text: "Incidencia", value: "incidencia.codigo", sortable: true },
         { text: "Descripcion", value: "descripcion", sortable: false },
         { text: "FechaIni", value: "fechaInicio", sortable: true },

@@ -31,7 +31,7 @@
 
             <v-list-item :to="{ name: 'incidencia' }">
               <v-list-item-action>
-                <v-icon>table_chart</v-icon>
+                <v-icon>mdi-note</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
@@ -65,7 +65,7 @@
 
             <v-list-item :to="{ name: 'reincidencia' }">
               <v-list-item-action>
-                <v-icon>table_chart</v-icon>
+                <v-icon>mdi-note-multiple</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
@@ -99,18 +99,29 @@
 
             <v-list-item :to="{ name: 'reporte' }">
               <v-list-item-action>
-                <v-icon>table_chart</v-icon>
+                <v-icon>mdi-chart-bar</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
-                  Reporte
+                  Grafico
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item :to="{ name: 'reporte2' }">
+              <v-list-item-action>
+                <v-icon>mdi-table</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Tareas
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
         </template>
 
-        <template v-if="esAdministrador">
+       <template v-if="esAdministrador">
           <v-list-group>
             <v-list-item slot="activator">
               <v-list-item-content>
@@ -122,7 +133,7 @@
 
             <v-list-item :to="{ name: 'usuario' }">
               <v-list-item-action>
-                <v-icon>table_chart</v-icon>
+                <v-icon>mdi-account-multiple</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>

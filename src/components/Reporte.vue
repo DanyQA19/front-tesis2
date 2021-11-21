@@ -2,107 +2,111 @@
   <v-container>
     <v-layout wrap>
       <v-flex xs12>
-        <v-card>
-          <v-row>
-            <div>
-                <v-menu
-                    ref="menu"
-                    v-model="menu"
-                    :close-on-content-click="false"
-                    :return-value.sync="fechaInicio"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
+        <v-toolbar flat>
+          <v-toolbar-title>Grafico</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+
+                  <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :return-value.sync="fechaInicio"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="fechaInicio"
+                          label="Fecha Inicio"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
                         v-model="fechaInicio"
-                        label="Fecha Inicio"
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="fechaInicio"
-                      no-title
-                      scrollable
-                    >
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        text
-                        color="primary"
-                        @click="menu = false"
+                        no-title
+                        scrollable
                       >
-                        Cancel
-                      </v-btn>
-                      <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.menu.save(fechaInicio)"
-                      >
-                        OK
-                      </v-btn>
-                    </v-date-picker>
-                  </v-menu>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="menu = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.menu.save(fechaInicio)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
 
-            </div>
+              <v-spacer></v-spacer>
 
-            <div>
-                <v-menu
-                    ref="menu2"
-                    v-model="menu2"
-                    :close-on-content-click="false"
-                    :return-value.sync="fechaTermino"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="fechaTermino"
-                        label="Fecha Termino"
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="fechaTermino"
-                      no-title
-                      scrollable
-                    >
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        text
-                        color="primary"
-                        @click="menu2 = false"
-                      >
-                        Cancel
-                      </v-btn>
-                      <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.menu2.save(fechaTermino)"
-                      >
-                        OK
-                      </v-btn>
-                    </v-date-picker>
-                  </v-menu>
-            </div>
-
-            <div>
-                <v-btn color="primary" outlined class="mb-2"  @click="guardar">Buscar<v-icon right dark>mdi-magnify</v-icon></v-btn>
-            </div>
               
-            <div>
-                <v-btn color="error" outlined class="mb-2"   @click="limpiar">Limpiar<v-icon right dark>mdi-eraser</v-icon></v-btn>
-            </div>
-          </v-row>
-          <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v"></div>
-        </v-card>
+                  <v-menu
+                      ref="menu2"
+                      v-model="menu2"
+                      :close-on-content-click="false"
+                      :return-value.sync="fechaTermino"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="fechaTermino"
+                          label="Fecha Termino"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="fechaTermino"
+                        no-title
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="menu2 = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.menu2.save(fechaTermino)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+              
+              <v-spacer></v-spacer>
+
+              
+                  <v-btn color="primary" outlined class="mb-2"  @click="guardar">Buscar<v-icon right dark>mdi-magnify</v-icon></v-btn>
+              <v-spacer></v-spacer>
+                
+              
+                  <v-btn color="error" outlined class="mb-2"   @click="limpiar">Limpiar<v-icon right dark>mdi-eraser</v-icon></v-btn>
+              <v-spacer></v-spacer>
+            
+            <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v"></div>
+          
+        </v-toolbar>
       </v-flex>
         
        <v-flex>

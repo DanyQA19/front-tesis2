@@ -263,7 +263,7 @@ export default {
       incidencias: [], // se agrega variable, se alamcena datos del back
       dialogDelete: false,
       headers: [
-        { text: "Codigo", value: "codigo", sortable: true },
+        { text: "Codigo", value: "codigo", sortable: false },
         { text: "Responsable", value: "responsable.nombre", sortable: true },
         { text: "Tipo", value: "tipo", sortable: true },
         { text: "Descripcion", value: "descripcion", sortable: false },
