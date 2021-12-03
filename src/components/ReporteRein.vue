@@ -4,7 +4,7 @@
       <!-- :items="desserts" es arreglo -->
       <v-data-table
         :headers="headers"
-        :items="incidencias"
+        :items="reincidencias"
         :search="search"
         class="elevation-1"
       >
@@ -14,10 +14,10 @@
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
 
-            <v-select v-model="responsable"
-                :items="responsables"
-                label="Responsable"
-            ></v-select>
+            <!-- <v-select v-model="incidencia"
+                :items="incidencias"
+                label="Reincidencias"
+            ></v-select> -->
 
             <v-spacer></v-spacer>
             <v-menu
@@ -145,21 +145,17 @@ export default {
     return {
       dialog: false,
       search: "",
-      incidencias: [], // se agrega variable, se alamcena datos del back
+      reincidencias: [], // se agrega variable, se alamcena datos del back
       dialogDelete: false,
       headers: [
-        { text: "Codigo", value: "codigo", sortable: false },
-        { text: "Responsable", value: "responsable.nombre", sortable: true },
-        { text: "Tipo", value: "tipo", sortable: true },
+        { text: "#", value: "replica", sortable: false },
+        { text: "Incidencia", value: "incidencia.codigo", sortable: true },
         { text: "Descripcion", value: "descripcion", sortable: false },
-        { text: "Cliente", value: "nombreCliente", sortable: true },
-        { text: "Prioridad", value: "prioridad", sortable: true },
-        { text: "Atención", value: "medioAtencion", sortable: true },
         { text: "FechaIni", value: "fechaInicio", sortable: true },
-        { text: "FechaTer", value: "fechaTermino", sortable: true },
+        { text: "FechaTer", value: "fechaTermino", sortable: true }
       ],
-      responsable: "",
-      responsables: [],
+      incidencia: "",
+      incidencias: [],
       fechaInicio: "",
       fechaTermino: "",
       menu: false,
@@ -171,33 +167,25 @@ export default {
   },
   created() {
     this.listar();
-    this.selectResponsable();
+    this.selectIncidencia();
   },
 
   methods: {
     crearPDF(){
       var columns = [
-        {title: "Codigo", dataKey: "codigo"},
-        {title: "Responsable", dataKey: "responsable"},
-        {title: "Tipo", dataKey: "tipo"},
+        {title: "numero", dataKey: "replica"},
+        {title: "Incidencia", dataKey: "incidencia"},
         {title: "Descripcion", dataKey: "descripcion"},
-        {title: "Cliente", dataKey: "cliente"},
-        {title: "Prioridad", dataKey: "prioridad"},
-        {title: "Atencion", dataKey: "atencion"},
         {title: "Fecha Inicio", dataKey: "fecha_inicio"},
         {title: "Fecha Termino", dataKey: "fecha_termino"},
       ];
       var rows = [];
 
-      this.incidencias.map(function(x){
+      this.reincidencias.map(function(x){
         rows.push({
-          codigo: x.codigo,
-          responsable: x.responsable.nombre,
-          tipo: x.tipo,
+          replica: x.replica,
+          incidencia: x.incidencia.codigo,
           descripcion: x.descripcion,
-          cliente: x.nombreCliente,
-          prioridad: x.prioridad,
-          atencion: x.medioAtencion,
           fecha_inicio: x.fechaInicio,
           fecha_termino: x.fechaTermino
         });
@@ -208,24 +196,23 @@ export default {
       doc.autoTable(columns, rows, {
         margin: {top: 60},
         addPageContent: function(data) {
-          doc.text("Reporte de incidencias", 40, 30);
+          doc.text("Reporte de reincidencias", 40, 30);
         }
       });
 
-      doc.save("Incidencias.pdf"); 
+      doc.save("Reincidencias.pdf"); 
     },
-    selectResponsable(){
+    selectIncidencia(){
       let me = this;
-      let responsableArray = [];
+      let incidenciaArray = [];
       let header = {"token": this.$store.state.token};
       let configuracion = {headers: header};
-      axios.get("usuario/listar", configuracion)
+      axios.get("incidencia/listar", configuracion)
         .then(function(response) {
-          responsableArray = response.data;
-          responsableArray.map(function(x){
-            if(x.rol == 'trabajador'){
-              me.responsables.push({text: x.nombre, value: x._id});
-            }
+          incidenciaArray = response.data;
+          incidenciaArray.map(function(x){
+           
+              me.incidencias.push({text: x.codigo, value: x._id});
             
           });
         })
@@ -239,9 +226,9 @@ export default {
       let header = {"token": this.$store.state.token};
       let configuracion = {headers: header};
       axios
-        .get("reporte/filtrar1", configuracion)
+        .get("reporte2/filtrar3", configuracion)
         .then(function(response) {
-          me.incidencias = response.data;
+          me.reincidencias = response.data;
         })
         .catch(function(error) {
           console.log(error);
@@ -250,7 +237,7 @@ export default {
     limpiar() {
             this.fechaInicio = "";
             this.fechaTermino = "";
-            this.responsable = "",
+            this.incidencia = "",
             this.valores = [];
     },
     validar(){
@@ -277,10 +264,10 @@ export default {
                 return;
             }
                 
-            axios.post("reporte/filtrar2", {fechaInicio: this.fechaInicio, fechaTermino: this.fechaTermino, responsable: this.responsable}, configuracion)
+            axios.post("reporte2/filtrar4", {fechaInicio: this.fechaInicio, fechaTermino: this.fechaTermino}, configuracion)
             .then(function(response) {
-              me.incidencias = [];
-              me.incidencias = response.data;
+              me.reincidencias = [];
+              me.reincidencias = response.data;
             })
             .catch(function(error) {
                 console.log(error);

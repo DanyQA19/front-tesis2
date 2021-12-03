@@ -29,6 +29,7 @@
               </v-list-item-content>
             </v-list-item>
 
+
             <v-list-item :to="{ name: 'incidencia' }">
               <v-list-item-action>
                 <v-icon>mdi-note</v-icon>
@@ -97,27 +98,73 @@
               </v-list-item-content>
             </v-list-item>
 
+            <!-- <v-list-item :to="{ name: 'reporte' }">
+              <v-list-item-action>
+                <v-icon>mdi-chart-bar</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Grafico / Incidencias
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item> -->
+
+            <v-list-item :to="{ name: 'reporte2' }">
+              <v-list-item-action>
+                <v-icon>mdi-book</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Informe / Incidencias
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item :to="{ name: 'reporteRein' }">
+              <v-list-item-action>
+                <v-icon>mdi-book-multiple</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Informe / Reincidencias
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+          </v-list-group>
+        </template>
+
+        <template v-if="esAdministrador || esGerente">
+          <v-list-group>
+            <v-list-item slot="activator">
+              <v-list-item-content>
+                <v-list-item-title>
+                  Estadistica
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
             <v-list-item :to="{ name: 'reporte' }">
               <v-list-item-action>
                 <v-icon>mdi-chart-bar</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
-                  Grafico
+                  Grafico / Incidencias
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
 
-            <v-list-item :to="{ name: 'reporte2' }">
+            <!-- <v-list-item :to="{ name: 'reporte2' }">
               <v-list-item-action>
                 <v-icon>mdi-table</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
-                  Tareas
+                  Informe / Incidencias
                 </v-list-item-title>
               </v-list-item-content>
-            </v-list-item>
+            </v-list-item> -->
           </v-list-group>
         </template>
 
