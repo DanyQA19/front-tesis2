@@ -88,7 +88,7 @@
           </v-list-group>
         </template>
 
-        <template v-if="esAdministrador || esGerente">
+        <template v-if="esAdministrador || esGerente || esTrabajador">
           <v-list-group>
             <v-list-item slot="activator">
               <v-list-item-content>

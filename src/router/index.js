@@ -72,7 +72,8 @@ const routes = [
     component: Reporte2,
     meta: {
       administrador: true,
-      gerente: true
+      gerente: true,
+      trabajador: true
     }
   },
   {
@@ -81,7 +82,8 @@ const routes = [
     component: ReporteRein,
     meta: {
       administrador: true,
-      gerente: true
+      gerente: true,
+      trabajador: true
     }
   },
 ];
