@@ -1,0 +1,10 @@
+{
+    "name": "tesis-2",
+    "version": "1.0.0",
+    "description": "front-tesis",
+    "author": "FISI",
+    "private": true,
+    "scripts": {
+      "postinstall": "npm install express"
+    }
+  }
